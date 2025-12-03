@@ -41,10 +41,6 @@ def load_data(filename):
         sys.exit(1)
 
 
-def normalize(x):
-    return (x - np.mean(x)) / np.std(x)
-
-
 def train(x, y, lr=0.01, epochs=1000):
     m = len(y)
     theta0, theta1 = 0, 0
@@ -66,11 +62,14 @@ if __name__ == "__main__":
         sys.exit(1)
     filename = sys.argv[1]
     x, y = load_data(filename)
-    x_norm = normalize(x)
+    x_mean = np.mean(x)
+    x_std = np.std(x)
+    x_norm = (x - x_mean) / x_std;
 
     theta0, theta1 = train(x_norm, y, lr=0.01, epochs=2000)
     with open("weights.txt", "w") as f:
         f.write(f"{theta0}\n{theta1}\n")
+        f.write(f"{x_mean}\n{x_std}\n")
 
     y_pred = predict(x_norm, theta0, theta1)
 
